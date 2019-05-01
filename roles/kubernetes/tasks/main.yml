@@ -1,0 +1,6 @@
+---
+- include: repo.yml
+- include: packages.yml
+- include: configure.yml
+- include: run.yml
+- include: dashboard.yml

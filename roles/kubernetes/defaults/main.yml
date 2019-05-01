@@ -1,0 +1,10 @@
+---
+kube_packages:
+  - kubelet
+  - kubeadm
+  - kubectl
+kube_version: v1.14.1
+pod_network_cidr: 10.244.0.0/16
+kubeadmin_config: /etc/kubernetes/admin.conf
+kube_cni: https://raw.githubusercontent.com/coreos/flannel/a70459be0084506e4ec919aa1c114638878db11b/Documentation/kube-flannel.yml
+kube_dashboard: https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended/kubernetes-dashboard.yaml

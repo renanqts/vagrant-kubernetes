@@ -1,0 +1,9 @@
+---
+- name: Disable SELinux
+  register: selinux_state
+  selinux:
+    state: disabled
+
+- name: Reboot to apply SELinux state
+  reboot: reboot_timeout=3600
+  when: selinux_state.changed 

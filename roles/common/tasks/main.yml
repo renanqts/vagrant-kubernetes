@@ -1,0 +1,4 @@
+---
+- include: centos.yml
+- include: swap.yml
+- include: selinux.yml

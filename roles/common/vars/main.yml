@@ -1,0 +1,4 @@
+system_packages:
+  - git
+  - python-pip
+  - net-tools

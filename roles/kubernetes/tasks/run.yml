@@ -1,0 +1,29 @@
+---
+- name: Reset Kubernetes component
+  register: reset_cluster
+  shell: "kubeadm reset --force"
+
+- name: Init Kubernetes cluster
+  register: init_cluster
+  when: reset_cluster is succeeded
+  shell: |
+    kubeadm init --kubernetes-version {{ kube_version }} \
+                 --pod-network-cidr {{ pod_network_cidr }} \
+                 --apiserver-advertise-address {{ vagrant_ip }}
+
+- name: Create Kubernetes config directory
+  file:
+    path: ".kube/"
+    state: directory
+
+- name: Copy admin.conf to home
+  when: init_cluster is succeeded
+  shell: cp {{ kubeadmin_config }} .kube/config
+
+- name: Set Flannel CNI
+  when: init_cluster is succeeded
+  shell: kubectl apply -f {{ kube_cni }}
+
+- name: Enable schedule pods on the master
+  when: init_cluster is succeeded
+  shell: kubectl taint nodes --all node-role.kubernetes.io/master-
