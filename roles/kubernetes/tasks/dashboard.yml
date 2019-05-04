@@ -1,6 +1,5 @@
 ---
 - name: Deploy Kubernetes dashboard
-  become: "{{ kube_user }}" 
   register: deploy_result
   command: kubectl --kubeconfig={{ kubeadmin_config }} apply -f {{ kube_dashboard }}
   until: deploy_result.rc == 0

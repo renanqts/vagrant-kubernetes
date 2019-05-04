@@ -9,16 +9,22 @@
   shell: |
     kubeadm init --kubernetes-version {{ kube_version }} \
                  --pod-network-cidr {{ pod_network_cidr }} \
-                 --apiserver-advertise-address {{ vagrant_ip }}
+                 --apiserver-advertise-address {{ ansible_default_ipv4.address }}
 
 - name: Create Kubernetes config directory
   file:
-    path: ".kube/"
+    path: "~/.kube/"
     state: directory
 
 - name: Copy admin.conf to home
   when: init_cluster is succeeded
-  shell: cp {{ kubeadmin_config }} .kube/config
+  copy:
+    src: "{{ kubeadmin_config }}"
+    dest: "~/.kube/config"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: 0755
+    remote_src: yes
 
 - name: Set Flannel CNI
   when: init_cluster is succeeded
