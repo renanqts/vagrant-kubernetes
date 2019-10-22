@@ -1,3 +1,0 @@
----
-- name: Kube repo
-  copy: src=files/kubernetes.repo dest=/etc/yum.repos.d/kubernetes.repo

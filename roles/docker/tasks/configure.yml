@@ -1,3 +1,0 @@
----
-- name: Restart docker immediately
-  service: name=docker state=restarted enabled=yes

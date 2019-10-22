@@ -1,6 +1,0 @@
----
-- name: Kube packages
-  yum:
-    name: "{{ kube_packages }}"
-    state: present
-    disable_excludes: kubernetes

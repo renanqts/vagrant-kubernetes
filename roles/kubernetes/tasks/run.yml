@@ -1,23 +1,21 @@
 ---
-- name: Reset Kubernetes component
-  register: reset_cluster
-  shell: "kubeadm reset --force"
+- name: Check if cluster is already initiated
+  register: kubeadm_status
+  ignore_errors: True
+  command: kubeadm init --dry-run
 
-- name: Init Kubernetes cluster
-  register: init_cluster
-  when: reset_cluster is succeeded
+- name: Init cluster
+  when: kubeadm_status.rc == 0
   shell: |
-    kubeadm init --kubernetes-version {{ kube_version }} \
-                 --pod-network-cidr {{ pod_network_cidr }} \
+    kubeadm init --pod-network-cidr {{ pod_network_cidr }} \
                  --apiserver-advertise-address {{ ansible_default_ipv4.address }}
 
-- name: Create Kubernetes config directory
+- name: Create kubectl config directory
   file:
     path: "~/.kube/"
     state: directory
 
-- name: Copy admin.conf to home
-  when: init_cluster is succeeded
+- name: Copy config to kube directory 
   copy:
     src: "{{ kubeadmin_config }}"
     dest: "~/.kube/config"
@@ -26,10 +24,13 @@
     mode: 0755
     remote_src: yes
 
-- name: Set Flannel CNI
-  when: init_cluster is succeeded
-  shell: kubectl apply -f {{ kube_cni }}
+- name: Set Flannel as CNI
+  command: kubectl apply -f {{ kube_cni }} 
+
+- name: Get node state
+  register: node_state
+  command: kubectl get nodes
 
 - name: Enable schedule pods on the master
-  when: init_cluster is succeeded
-  shell: kubectl taint nodes --all node-role.kubernetes.io/master-
+  when: '"NotReady" in node_state.stdout_lines'
+  command: kubectl taint nodes --all node-role.kubernetes.io/master-

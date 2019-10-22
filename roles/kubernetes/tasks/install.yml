@@ -1,4 +1,13 @@
 ---
+- name: Kube repo
+  copy: src=files/kubernetes.repo dest=/etc/yum.repos.d/kubernetes.repo
+
+- name: Kube packages
+  yum:
+    name: "{{ kube_packages }}"
+    state: present
+    disable_excludes: kubernetes
+
 - name: Kubelet service enabled 
   systemd:
     name: kubelet
