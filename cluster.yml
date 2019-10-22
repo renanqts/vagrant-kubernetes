@@ -2,6 +2,6 @@
 - hosts: all 
   become: yes
   roles:
-    - common
-    - docker
+#    - common
+#    - docker
     - kubernetes

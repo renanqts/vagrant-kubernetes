@@ -1,6 +1,4 @@
 ---
-- include: repo.yml
-- include: packages.yml
-- include: configure.yml
+- include: install.yml
 - include: run.yml
-- include: dashboard.yml
+- include: account.yml

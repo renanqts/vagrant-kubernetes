@@ -1,3 +1,0 @@
----
-- name: Set Flannel CNI
-  shell: kubectl apply -f {{ kube_cni }}

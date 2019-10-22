@@ -1,0 +1,62 @@
+---
+# This will create an admin account in the cluster
+- name: Crate admin ClusterRoleBinding 
+  k8s:
+    state: present
+    definition:
+      apiVersion: rbac.authorization.k8s.io/v1
+      kind: ClusterRoleBinding
+      metadata:
+        name: admin
+      roleRef:
+        apiGroup: rbac.authorization.k8s.io
+        kind: ClusterRole
+        name: cluster-admin
+      subjects:
+      - kind: ServiceAccount
+        name: admin
+        namespace: kube-system
+
+- name: Create admin ServiceAccount
+  k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: ServiceAccount
+      metadata:
+        name: admin
+        namespace: kube-system
+
+- name: Get ServiceAccount details 
+  k8s_facts:
+    api_version: v1
+    kind: ServiceAccount 
+    name: admin 
+    namespace: kube-system 
+  register: admin_sa
+
+- name: Get secret token 
+  k8s_facts:
+    api_version: v1
+    kind: Secret 
+    name: '{{ admin_sa.resources[0].secrets[0].name }}' 
+    namespace: kube-system 
+  register: admin_secret
+
+- name: Check if local machine has kubectl 
+  register: check_kubectl
+  connection: local
+  become: false
+  command: kubectl --help 
+  ignore_errors: yes
+
+- name: If kubectl is installed, add cluster
+  when: check_kubectl.rc == 0
+  connection: local
+  become: false
+  command: '{{ item }}' 
+  loop:
+    - kubectl config set-cluster vagrant-cluster --insecure-skip-tls-verify=true --server=https://10.0.10.11:6443
+    - kubectl config set-credentials vagrant-cluster --token={{ admin_secret.resources[0].data.token | b64decode }}
+    - kubectl config set-context vagrant-cluster --cluster vagrant-cluster --user vagrant-cluster 
+    - kubectl config use-context vagrant-cluster
