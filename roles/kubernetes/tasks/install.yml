@@ -12,12 +12,7 @@
   systemd:
     name: kubelet
     enabled: yes
-
-- name: Ensure br_netfilter module is loaded
-  modprobe:
-    name: br_netfilter
-    state: present
-
+    
 # CentOS 7 have reported issues with traffic being routed incorrectly due to iptables being bypassed
 - name: Kube bridge param
   sysctl:
