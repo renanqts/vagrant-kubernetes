@@ -5,7 +5,7 @@ ENV['VAGRANT_DEFAULT_PROVIDER'] = 'virtualbox'
 base_dir = File.expand_path(File.dirname(__FILE__))
 
 cluster = {
-  "master" => { :ip => "10.0.10.11",  :cpus => 2, :mem => 2048 },
+  "master" => { :ip => "10.0.10.11",  :cpus => 2, :mem => 4096 },
 }
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
