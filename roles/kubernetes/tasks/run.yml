@@ -27,10 +27,6 @@
 - name: Set Flannel as CNI
   command: kubectl apply -f {{ kube_cni }} 
 
-- name: Get node state
-  register: node_state
-  command: kubectl get nodes
-
 - name: Enable schedule pods on the master
-  when: '"NotReady" in node_state.stdout_lines'
-  command: kubectl taint nodes --all node-role.kubernetes.io/master-
+  ignore_errors: True
+  command: kubectl taint node master node-role.kubernetes.io/master:NoSchedule-
