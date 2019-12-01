@@ -3,6 +3,7 @@
   yum:
     name: '*'
     state: latest 
+    exclude: docker-ce
 
 - name: Install required system packages
   yum: name={{ system_packages }} state=present

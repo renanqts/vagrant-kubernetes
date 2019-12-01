@@ -19,7 +19,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.define hostname do |cfg|
 
       cfg.vm.provider :virtualbox do |vb, override|
-        override.vm.box = "centos/7"
+        override.vm.box = "centos/8"
         override.vm.network :private_network, ip: "#{info[:ip]}"
         override.vm.hostname = hostname
 

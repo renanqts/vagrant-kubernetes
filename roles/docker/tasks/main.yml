@@ -1,13 +1,12 @@
 ---
-- name: Ensure group docker exists
-  group:
-    name: docker
-    state: present
+- name: Enable Docker repo
+  shell: dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
 
-- name: Install Docker
-  yum:
-    name: docker
-    state: present
+- name: Install Docker CE
+  shell: dnf -y install docker-ce --nobest
 
-- name: Ensure docker started 
-  service: name=docker state=started enabled=yes
+- name: Enable Docker
+  systemd:
+    name: docker
+    state: started
+    enabled: yes

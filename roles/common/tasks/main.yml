@@ -1,4 +1,4 @@
 ---
-- include: centos.yml
+- include: packages.yml 
 - include: swap.yml
 - include: selinux.yml
