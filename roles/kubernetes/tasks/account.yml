@@ -43,18 +43,25 @@
     namespace: kube-system 
   register: admin_secret
 
+- debug:
+    msg: "Using Python path /usr/bin/python"
+
 - name: Check if local machine has kubectl 
+  vars:
+    ansible_python_interpreter: /usr/bin/python 
   register: check_kubectl
   connection: local
   become: false
-  command: kubectl --help 
+  shell: kubectl --help 
   ignore_errors: yes
 
 - name: If kubectl is installed, add cluster
+  vars:
+    ansible_python_interpreter: /usr/bin/python 
   when: check_kubectl.rc == 0
   connection: local
   become: false
-  command: '{{ item }}' 
+  shell: '{{ item }}' 
   loop:
     - kubectl config set-cluster vagrant-cluster --insecure-skip-tls-verify=true --server=https://10.0.10.11:6443
     - kubectl config set-credentials vagrant-cluster --token={{ admin_secret.resources[0].data.token | b64decode }}
