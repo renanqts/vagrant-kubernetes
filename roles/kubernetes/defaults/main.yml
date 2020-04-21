@@ -3,7 +3,7 @@ kube_packages:
   - kubelet
   - kubeadm
   - kubectl
-kube_version: v1.16.1
+kube_version: v1.18.1
 pod_network_cidr: 10.244.0.0/16
 kubeadmin_config: /etc/kubernetes/admin.conf
 kube_cni: https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml 
